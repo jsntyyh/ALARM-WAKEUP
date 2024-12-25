@@ -287,7 +287,7 @@ function startBackgroundCycle() {
     setRandomBackground();
     
     // 每5秒切换一次背景
-    setInterval(setRandomBackground, 5000);
+    setInterval(setRandomBackground, 30000);
 }
 
 // 添加窗口大小改变时的处理
