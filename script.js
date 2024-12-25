@@ -84,8 +84,8 @@ window.onload = function() {
     alarmSound.src = defaultAlarmURL;
     alarmSound.load();
     
-    // 设置随机背景
-    setRandomBackground();
+    // 启动背景循环
+    startBackgroundCycle();
     initTimePicker();
 }
 
@@ -251,19 +251,43 @@ function stopAlarm() {
 setInterval(updateCurrentTime, 1000);
 updateCurrentTime();
 
-// 添加背景图片处理函数
+// 修改背景图片处理函数
 function setRandomBackground() {
     const backgrounds = [
         'background/bg1.jpg',
         'background/bg2.jpg',
-        // 可以根据实际图片数量添加更多
+        'background/bg3.jpg',
+        'background/bg4.jpg',
+        'background/bg5.jpg',
+        'background/bg6.jpg',
+        // 可以添加更多背景图片
     ];
     
-    const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
     const bgContainer = document.querySelector('.background-container');
+    const currentBg = bgContainer.style.backgroundImage || '';
+    let newBg;
     
-    // 直接设置背景图片
-    bgContainer.style.backgroundImage = `url('${randomBg}')`;
+    if (backgrounds.length < 2) {
+        console.warn('背景图片数量不足，需要至少2张图片');
+        return;
+    }
+    
+    // 确保不会连续显示同一张图片
+    do {
+        newBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    } while (currentBg && `url('${newBg}')` === currentBg);
+    
+    // 设置新背景
+    bgContainer.style.backgroundImage = `url('${newBg}')`;
+}
+
+// 添加自动切换背景的函数
+function startBackgroundCycle() {
+    // 初始设置背景
+    setRandomBackground();
+    
+    // 每5秒切换一次背景
+    setInterval(setRandomBackground, 5000);
 }
 
 // 添加窗口大小改变时的处理
