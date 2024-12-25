@@ -41,7 +41,7 @@ function setAlarm() {
         return;
     }
     if (!verificationText) {
-        alert('请设置验证文本！');
+        alert('请设置验证文本���');
         return;
     }
 
@@ -169,15 +169,25 @@ updateCurrentTime();
 
 // 添加背景图片处理函数
 function setRandomBackground() {
-    // 背景图片列表
     const backgrounds = [
         'background/bg1.jpg',
+        'background/bg2.jpg',
         // 可以根据实际图片数量添加更多
     ];
     
-    // 随机选择一张图片
     const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
     
-    // 设置背景
-    document.body.style.backgroundImage = `url('${randomBg}')`;
-} 
+    // 创建一个图片对象来获取图片尺寸
+    const img = new Image();
+    img.onload = function() {
+        const bgContainer = document.querySelector('.background-container');
+        // 设置容器高度为图片实际高度
+        bgContainer.style.height = (window.innerWidth * (this.height / this.width)) + 'px';
+        bgContainer.style.backgroundImage = `url('${randomBg}')`;
+        bgContainer.style.backgroundSize = '100% auto';
+    }
+    img.src = randomBg;
+}
+
+// 添加窗口大小改变时的处理
+window.addEventListener('resize', setRandomBackground); 
