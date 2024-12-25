@@ -15,20 +15,10 @@ body {
     width: 100vw;
     height: auto;
     z-index: -1;
-}
-
-.background-container::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background-position: center top;
+    background-size: 100% auto;
+    background-position: center bottom;
     background-repeat: no-repeat;
     transition: background-image 0.5s ease-in-out;
-    z-index: -1;
 }
 
 .container {
@@ -131,24 +121,26 @@ body {
 }
 
 .clock {
+    width: 100%;
     font-size: 3rem;
     text-align: center;
-    margin: 2rem 0;
+    margin: 1rem 0;
+    padding: 1rem 0;
 }
 
 .alarm-section {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    align-items: flex-end;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
 }
 
 .alarm-inputs {
-    flex: 1;
+    width: 100%;
 }
 
 .input-group {
-    margin-bottom: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .input-group label {
@@ -178,6 +170,16 @@ button:hover {
 
 #alarm-list {
     margin-top: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease-in-out;
+}
+
+#alarm-list.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 #alarms {
@@ -189,11 +191,20 @@ button:hover {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem;
-    border-bottom: 1px solid #eee;
     background-color: rgba(255, 255, 255, 0.3);
     margin-bottom: 0.5rem;
     border-radius: 4px;
     border: none;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .music-section {
@@ -271,97 +282,188 @@ input[type="file"] {
     margin: 1rem 0;
 }
 
+/* 时间选择器容器样式 */
 .time-picker {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-    touch-action: none;  /* 禁止默认触摸行为 */
-}
-
-.time-picker-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.time-picker-viewport {
-    height: 40px;
-    width: 60px;
-    overflow: hidden;
-    position: relative;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    -webkit-overflow-scrolling: touch;  /* 优化移动端滚动 */
-    touch-action: none;  /* 禁止默认触摸行为 */
-}
-
-.time-picker-wheel {
-    position: absolute;
+    gap: 15px;
     width: 100%;
-    transition: transform 0.3s ease;
-    text-align: center;
-    user-select: none;  /* 防止文本被选中 */
-    -webkit-user-select: none;
+    max-width: 300px;
+    margin: 0.5rem auto;
 }
 
-.time-picker-wheel div {
-    height: 40px;
-    line-height: 40px;
-    font-size: 1.2em;
-    color: #333;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-}
-
+/* 上下箭头按钮基础样式 */
 .time-picker-up,
 .time-picker-down {
     cursor: pointer;
     user-select: none;
     width: 100%;
     text-align: center;
-    color: #4CAF50;
-    background: rgba(255, 255, 255, 0.3);
+    color: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 4px;
-    padding: 2px 0;
-    transition: background-color 0.2s;
+    padding: 4px 0;
+    transition: all 0.2s ease;
+    position: relative;
+    height: 24px;
+    display: flex;  /* 默认显示箭头 */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 自定义箭头样��� */
+.time-picker-up::after,
+.time-picker-down::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid rgba(0, 0, 0, 0.5);
+    border-top: 2px solid rgba(0, 0, 0, 0.5);
+    position: absolute;
+}
+
+.time-picker-up::after {
+    transform: rotate(45deg);
+    top: 10px;
+}
+
+.time-picker-down::after {
+    transform: rotate(-135deg);
+    top: 6px;
 }
 
 .time-picker-up:hover,
 .time-picker-down:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
 }
 
-.time-picker-separator {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #333;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+.time-picker-up:hover::after,
+.time-picker-down:hover::after {
+    border-color: rgba(0, 0, 0, 0.7);
 }
 
-/* 添加活跃状态样式 */
-.time-picker-wheel div.active {
-    background: rgba(255, 255, 255, 0.3);
-    font-weight: bold;
+/* 时间选择器列样式 */
+.time-picker-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* 优化移动端按钮大小 */
-@media screen and (max-width: 768px) {
+/* 移动端适配 - 隐藏箭头 */
+@media screen and (max-width: 1023px) {
     .time-picker-up,
     .time-picker-down {
-        padding: 8px 0;  /* 增加按钮高度便于点击 */
+        display: none !important;  /* 只在移动端强制隐藏 */
     }
     
+    .time-picker-column {
+        gap: 0;
+    }
+}
+
+/* 时间选择器视窗样式 */
+.time-picker-viewport {
+    height: 40px;
+    width: 50px;
+    overflow: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    touch-action: none;
+}
+
+/* 分隔符样式 */
+.time-picker-separator {
+    font-size: 2em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.6);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    padding: 0 5px;
+}
+
+/* 时间轮样式 */
+.time-picker-wheel {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* 时间数字样式 */
+.time-picker-wheel div {
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.5em;
+    color: rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    min-height: 40px;
+    min-width: 100%;
+}
+
+/* 当前选中的时间样式 */
+.time-picker-wheel div.active {
+    font-weight: bold;
+    color: #000;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .time-picker-column {
+        padding: 8px 12px;
+    }
+
     .time-picker-viewport {
-        height: 45px;  /* 稍微增加可视区域高度 */
+        height: 35px;
+        width: 45px;
     }
-    
+
     .time-picker-wheel div {
-        height: 45px;
-        line-height: 45px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 1.3em;
+    }
+
+    .time-picker-separator {
+        font-size: 1.8em;
+    }
+}
+
+/* 设置按钮样��整 */
+.alarm-section > button {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 1rem auto 0;
+    padding: 0.8rem;
+    font-size: 1.1em;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .clock {
+        font-size: 2.5rem;
+        margin: 0.5rem 0;
+        padding: 0.5rem 0;
+    }
+
+    .input-group {
+        margin-bottom: 0.8rem;
+    }
+
+    .alarm-section > button {
+        padding: 0.6rem;
     }
 } 

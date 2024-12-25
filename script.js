@@ -133,26 +133,38 @@ function setAlarm() {
     });
     
     updateAlarmList();
-    // 只清空验��文本输入框
+    // 只清空验证文本输入框
     document.getElementById('verification-text').value = '';
 }
 
 // 更新闹钟列表
 function updateAlarmList() {
     const alarmsList = document.getElementById('alarms');
+    const alarmListContainer = document.getElementById('alarm-list');
+    
+    // 清空现有列表
     alarmsList.innerHTML = '';
     
-    alarms.forEach((alarm, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <div class="alarm-info">
-                <span>时间：${alarm.time}</span>
-                <span>验证文本：${alarm.verificationText}</span>
-            </div>
-            <button onclick="deleteAlarm(${index})">删除</button>
-        `;
-        alarmsList.appendChild(li);
-    });
+    // 根据是否有闹钟来显示或隐藏列表
+    if (alarms.length > 0) {
+        alarmListContainer.classList.add('show');
+        
+        // 添加闹钟项，并设置延迟动画
+        alarms.forEach((alarm, index) => {
+            const li = document.createElement('li');
+            li.style.animationDelay = `${index * 0.1}s`; // 每个项目依次延迟出现
+            li.innerHTML = `
+                <div class="alarm-info">
+                    <span>时间：${alarm.time}</span>
+                    <span>验证文本：${alarm.verificationText}</span>
+                </div>
+                <button onclick="deleteAlarm(${index})">删除</button>
+            `;
+            alarmsList.appendChild(li);
+        });
+    } else {
+        alarmListContainer.classList.remove('show');
+    }
 }
 
 // 删除闹钟
@@ -257,6 +269,7 @@ function setRandomBackground() {
         bgContainer.style.height = (window.innerWidth * (this.height / this.width)) + 'px';
         bgContainer.style.backgroundImage = `url('${randomBg}')`;
         bgContainer.style.backgroundSize = '100% auto';
+        bgContainer.style.backgroundPosition = 'center bottom';
     }
     img.src = randomBg;
 }
