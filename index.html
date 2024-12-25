@@ -15,7 +15,7 @@
         <div class="alarm-section">
             <div class="alarm-inputs">
                 <div class="input-group">
-                    <label>闹钟时间：</label>
+                    <h2>闹钟时间</h2>
                     <div class="time-picker">
                         <div class="time-picker-column hours">
                             <div class="time-picker-up" onclick="scrollTime('hours', -1)">▲</div>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="verification-text">验证文本：</label>
+                    <h2>验证文本</h2>
                     <input type="text" id="verification-text" placeholder="输入停止闹钟需要验证的文本">
                 </div>
             </div>
@@ -44,6 +44,7 @@
         <div class="music-section">
             <h2>闹钟音乐</h2>
             <input type="file" id="custom-alarm" accept="audio/*" onchange="handleAudioUpload(event)">
+            <label for="custom-alarm" class="file-upload-btn">选择音乐文件</label>
             <div class="alarm-controls" style="display: none;">
                 <button id="stop-alarm" onclick="stopAlarm()">停止闹钟</button>
             </div>
