@@ -3,6 +3,82 @@ let alarmSound = new Audio();
 let isAlarmPlaying = false;
 let defaultAlarmURL = 'sounds/alarm.mp3';
 
+// 添加时间选择器相关变量和函数
+let currentHour = 0;
+let currentMinute = 0;
+
+// 初始化时间选择器
+function initTimePicker() {
+    const hoursWheel = document.getElementById('hours-wheel');
+    const minutesWheel = document.getElementById('minutes-wheel');
+    
+    // 生成小时选项
+    for (let i = 0; i < 24; i++) {
+        const div = document.createElement('div');
+        div.textContent = i.toString().padStart(2, '0');
+        hoursWheel.appendChild(div);
+    }
+    
+    // 生成分钟选项
+    for (let i = 0; i < 60; i++) {
+        const div = document.createElement('div');
+        div.textContent = i.toString().padStart(2, '0');
+        minutesWheel.appendChild(div);
+    }
+    
+    // 添加触摸事件处理
+    let startY = 0;
+    let currentWheelType = '';
+    
+    function handleTouchStart(e) {
+        startY = e.touches[0].clientY;
+        currentWheelType = e.currentTarget.parentElement.parentElement.classList.contains('hours') ? 'hours' : 'minutes';
+        e.preventDefault(); // 阻止默认行为
+    }
+    
+    function handleTouchMove(e) {
+        const deltaY = e.touches[0].clientY - startY;
+        if (Math.abs(deltaY) > 10) { // 最小滑动距离
+            const direction = deltaY > 0 ? -1 : 1;
+            scrollTime(currentWheelType, direction);
+            startY = e.touches[0].clientY;
+        }
+        e.preventDefault(); // 阻止默认行为
+    }
+    
+    // 为两个轮子添加触摸事件
+    [hoursWheel, minutesWheel].forEach(wheel => {
+        wheel.addEventListener('touchstart', handleTouchStart, { passive: false });
+        wheel.addEventListener('touchmove', handleTouchMove, { passive: false });
+    });
+    
+    updateTimePickerPosition();
+}
+
+// 更新时间轮的位置
+function updateTimePickerPosition() {
+    const hoursWheel = document.getElementById('hours-wheel');
+    const minutesWheel = document.getElementById('minutes-wheel');
+    
+    hoursWheel.style.transform = `translateY(${-currentHour * 40}px)`;
+    minutesWheel.style.transform = `translateY(${-currentMinute * 40}px)`;
+}
+
+// 滚动时间
+function scrollTime(type, direction) {
+    if (type === 'hours') {
+        currentHour = (currentHour + direction + 24) % 24;
+    } else {
+        currentMinute = (currentMinute + direction + 60) % 60;
+    }
+    updateTimePickerPosition();
+}
+
+// 获取当前选择的时间
+function getSelectedTime() {
+    return `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+}
+
 // 页面加载时就设置默认音乐
 window.onload = function() {
     alarmSound.src = defaultAlarmURL;
@@ -10,6 +86,7 @@ window.onload = function() {
     
     // 设置随机背景
     setRandomBackground();
+    initTimePicker();
 }
 
 // 添加音频文件处理函数
@@ -33,25 +110,21 @@ function updateCurrentTime() {
 
 // 设置闹钟
 function setAlarm() {
-    const alarmTime = document.getElementById('alarm-time').value;
+    const alarmTime = getSelectedTime();
     const verificationText = document.getElementById('verification-text').value;
     
-    if (!alarmTime) {
-        alert('请设置闹钟时间！');
-        return;
-    }
     if (!verificationText) {
-        alert('请设置验证文本���');
+        alert('请设置验证文本！');
         return;
     }
-
-    // 检查是否已存在同时间的闹钟
+    
+    // 检查是否已存在相同时间的闹钟
     const isDuplicate = alarms.some(alarm => alarm.time === alarmTime);
     if (isDuplicate) {
         alert('该时间已经设置过闹钟了！');
         return;
     }
-
+    
     // 创建闹钟对象
     alarms.push({
         time: alarmTime,
@@ -60,8 +133,7 @@ function setAlarm() {
     });
     
     updateAlarmList();
-    // 清空输入框
-    document.getElementById('alarm-time').value = '';
+    // 只清空验��文本输入框
     document.getElementById('verification-text').value = '';
 }
 
@@ -129,7 +201,7 @@ function playAlarm() {
         
         // 更新模态框中的验证文本提示
         document.getElementById('required-text').textContent = `"${currentAlarm.verificationText}"`;
-        // 显示��态框
+        // 显示模态框
         document.getElementById('stopAlarmModal').style.display = 'block';
     }
 }

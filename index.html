@@ -16,8 +16,24 @@
         <div class="alarm-section">
             <div class="alarm-inputs">
                 <div class="input-group">
-                    <label for="alarm-time">闹钟时间：</label>
-                    <input type="time" id="alarm-time">
+                    <label>闹钟时间：</label>
+                    <div class="time-picker">
+                        <div class="time-picker-column hours">
+                            <div class="time-picker-up" onclick="scrollTime('hours', -1)">▲</div>
+                            <div class="time-picker-viewport">
+                                <div id="hours-wheel" class="time-picker-wheel"></div>
+                            </div>
+                            <div class="time-picker-down" onclick="scrollTime('hours', 1)">▼</div>
+                        </div>
+                        <div class="time-picker-separator">:</div>
+                        <div class="time-picker-column minutes">
+                            <div class="time-picker-up" onclick="scrollTime('minutes', -1)">▲</div>
+                            <div class="time-picker-viewport">
+                                <div id="minutes-wheel" class="time-picker-wheel"></div>
+                            </div>
+                            <div class="time-picker-down" onclick="scrollTime('minutes', 1)">▼</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="verification-text">验证文本：</label>

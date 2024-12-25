@@ -269,4 +269,99 @@ input[type="file"] {
     font-size: 1.2rem;
     text-align: center;
     margin: 1rem 0;
+}
+
+.time-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    touch-action: none;  /* 禁止默认触摸行为 */
+}
+
+.time-picker-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.time-picker-viewport {
+    height: 40px;
+    width: 60px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    -webkit-overflow-scrolling: touch;  /* 优化移动端滚动 */
+    touch-action: none;  /* 禁止默认触摸行为 */
+}
+
+.time-picker-wheel {
+    position: absolute;
+    width: 100%;
+    transition: transform 0.3s ease;
+    text-align: center;
+    user-select: none;  /* 防止文本被选中 */
+    -webkit-user-select: none;
+}
+
+.time-picker-wheel div {
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.2em;
+    color: #333;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.time-picker-up,
+.time-picker-down {
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    text-align: center;
+    color: #4CAF50;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    padding: 2px 0;
+    transition: background-color 0.2s;
+}
+
+.time-picker-up:hover,
+.time-picker-down:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.time-picker-separator {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* 添加活跃状态样式 */
+.time-picker-wheel div.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}
+
+/* 优化移动端按钮大小 */
+@media screen and (max-width: 768px) {
+    .time-picker-up,
+    .time-picker-down {
+        padding: 8px 0;  /* 增加按钮高度便于点击 */
+    }
+    
+    .time-picker-viewport {
+        height: 45px;  /* 稍微增加可视区域高度 */
+    }
+    
+    .time-picker-wheel div {
+        height: 45px;
+        line-height: 45px;
+    }
 } 
