@@ -208,15 +208,31 @@ button:hover {
     }
 }
 
+/* 音乐选择区域样式 */
 .music-section {
     margin-top: 2rem;
     padding: 1rem;
+    padding-left: 0;
     border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .music-section h2 {
-    margin-bottom: 1rem;
+    margin: 0;
     font-size: 1.2rem;
+    flex-shrink: 0;
+    padding-left: 0;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 480px) {
+    .music-section {
+        flex-direction: column;  /* 在小屏幕上改为垂直排列 */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
 
 .alarm-controls {
@@ -324,13 +340,13 @@ input[type="file"] {
     width: 100%;
     text-align: center;
     color: rgba(0, 0, 0, 0.5);
-    background: rgba(255, 255, 255, 0.4);
+    background: transparent;
     border-radius: 4px;
     padding: 4px 0;
     transition: all 0.2s ease;
     position: relative;
     height: 24px;
-    display: flex;  /* 默认显示箭头 */
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -359,7 +375,7 @@ input[type="file"] {
 
 .time-picker-up:hover,
 .time-picker-down:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: transparent;
     transform: scale(1.05);
 }
 
@@ -467,19 +483,20 @@ input[type="file"] {
 /* 设置闹钟按钮样式 */
 .alarm-section > button {
     display: block;
-    width: 100%;
-    max-width: 300px;
+    width: auto;  /* 改为自适应宽度 */
+    min-width: 120px;  /* 设置最小宽度 */
     margin: 1rem auto 0;
-    padding: 0.8rem;
-    font-size: 1.1em;
-    background: rgba(0, 0, 0, 0.85);  /* 加深黑色背景 */
-    color: rgba(255, 255, 255, 1);    /* 纯白色文字 */
-    border: 1px solid rgba(255, 255, 255, 0.15);  /* 更淡的边框 */
-    border-radius: 8px;
+    padding: 0.6rem 1.2rem;  /* 调整内边距 */
+    font-size: 1em;  /* 减小字体大小 */
+    background: rgba(0, 0, 0, 0.85);
+    color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;  /* 稍微减小圆角 */
     backdrop-filter: blur(5px);
     transition: all 0.3s ease;
     font-weight: 500;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);  /* 轻微的白色文字阴影 */
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -502,6 +519,8 @@ input[type="file"] {
     }
 
     .alarm-section > button {
-        padding: 0.6rem;
+        min-width: 100px;  /* 移动端更小的最小宽度 */
+        padding: 0.5rem 1rem;
+        font-size: 0.9em;
     }
 } 
