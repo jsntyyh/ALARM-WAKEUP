@@ -260,18 +260,10 @@ function setRandomBackground() {
     ];
     
     const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    const bgContainer = document.querySelector('.background-container');
     
-    // 创建一个图片对象来获取图片尺寸
-    const img = new Image();
-    img.onload = function() {
-        const bgContainer = document.querySelector('.background-container');
-        // 设置容器高度为图片实际高度
-        bgContainer.style.height = (window.innerWidth * (this.height / this.width)) + 'px';
-        bgContainer.style.backgroundImage = `url('${randomBg}')`;
-        bgContainer.style.backgroundSize = '100% auto';
-        bgContainer.style.backgroundPosition = 'center bottom';
-    }
-    img.src = randomBg;
+    // 直接设置背景图片
+    bgContainer.style.backgroundImage = `url('${randomBg}')`;
 }
 
 // 添加窗口大小改变时的处理
