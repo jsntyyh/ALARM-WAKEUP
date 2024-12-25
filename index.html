@@ -13,7 +13,16 @@
             <div id="current-time">00:00:00</div>
         </div>
         <div class="alarm-section">
-            <input type="time" id="alarm-time">
+            <div class="alarm-inputs">
+                <div class="input-group">
+                    <label for="alarm-time">闹钟时间：</label>
+                    <input type="time" id="alarm-time">
+                </div>
+                <div class="input-group">
+                    <label for="verification-text">验证文本：</label>
+                    <input type="text" id="verification-text" placeholder="输入停止闹钟需要验证的文本">
+                </div>
+            </div>
             <button onclick="setAlarm()">设置闹钟</button>
         </div>
         <div class="music-section">
@@ -30,7 +39,8 @@
         <div id="stopAlarmModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <h2>停止闹钟</h2>
-                <p>请输入 "hello world" 来停止闹钟：</p>
+                <p>请输入以下验证文本来停止闹钟：</p>
+                <p id="required-text" class="verification-hint"></p>
                 <input type="text" id="verificationInput" placeholder="输入验证文本">
                 <div class="modal-buttons">
                     <button onclick="verifyAndStopAlarm()">确认</button>

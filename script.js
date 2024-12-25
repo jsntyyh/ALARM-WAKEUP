@@ -7,6 +7,9 @@ let defaultAlarmURL = 'sounds/alarm.mp3';
 window.onload = function() {
     alarmSound.src = defaultAlarmURL;
     alarmSound.load();
+    
+    // 设置随机背景
+    setRandomBackground();
 }
 
 // 添加音频文件处理函数
@@ -31,22 +34,35 @@ function updateCurrentTime() {
 // 设置闹钟
 function setAlarm() {
     const alarmTime = document.getElementById('alarm-time').value;
-    if (!alarmTime) return;
+    const verificationText = document.getElementById('verification-text').value;
+    
+    if (!alarmTime) {
+        alert('请设置闹钟时间！');
+        return;
+    }
+    if (!verificationText) {
+        alert('请设置验证文本！');
+        return;
+    }
 
-    // 检查是否已存在相同时间的闹钟
+    // 检查是否已存在同时间的闹钟
     const isDuplicate = alarms.some(alarm => alarm.time === alarmTime);
     if (isDuplicate) {
         alert('该时间已经设置过闹钟了！');
         return;
     }
 
-    // 创建闹钟对象，包含时间和触���状态
+    // 创建闹钟对象
     alarms.push({
         time: alarmTime,
+        verificationText: verificationText,
         triggeredThisMinute: false
     });
+    
     updateAlarmList();
+    // 清空输入框
     document.getElementById('alarm-time').value = '';
+    document.getElementById('verification-text').value = '';
 }
 
 // 更新闹钟列表
@@ -57,7 +73,10 @@ function updateAlarmList() {
     alarms.forEach((alarm, index) => {
         const li = document.createElement('li');
         li.innerHTML = `
-            <span>${alarm.time}</span>
+            <div class="alarm-info">
+                <span>时间：${alarm.time}</span>
+                <span>验证文本：${alarm.verificationText}</span>
+            </div>
             <button onclick="deleteAlarm(${index})">删除</button>
         `;
         alarmsList.appendChild(li);
@@ -102,7 +121,15 @@ function playAlarm() {
         isAlarmPlaying = true;
         alarmSound.loop = true;
         alarmSound.play();
-        // 显示模态框而不是停止按钮
+        
+        // 获取当前响铃的闹钟验证文本
+        const now = new Date();
+        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const currentAlarm = alarms.find(alarm => alarm.time === currentTime);
+        
+        // 更新模态框中的验证文本提示
+        document.getElementById('required-text').textContent = `"${currentAlarm.verificationText}"`;
+        // 显示��态框
         document.getElementById('stopAlarmModal').style.display = 'block';
     }
 }
@@ -110,10 +137,16 @@ function playAlarm() {
 // 添加验证和停止闹钟函数
 function verifyAndStopAlarm() {
     const input = document.getElementById('verificationInput').value;
-    if (input.toLowerCase() === 'hello world') {
-        // 验证成功，停止闹钟
+    // 找到当前正在响的闹钟
+    const currentAlarm = alarms.find(alarm => {
+        const now = new Date();
+        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        return alarm.time === currentTime;
+    });
+
+    if (currentAlarm && input === currentAlarm.verificationText) {
+        // 验证成功
         stopAlarm();
-        // 清空输入框并隐藏模态框
         document.getElementById('verificationInput').value = '';
         document.getElementById('stopAlarmModal').style.display = 'none';
     } else {
@@ -132,4 +165,19 @@ function stopAlarm() {
 
 // 每秒更新一次时间
 setInterval(updateCurrentTime, 1000);
-updateCurrentTime(); 
+updateCurrentTime();
+
+// 添加背景图片处理函数
+function setRandomBackground() {
+    // 背景图片列表
+    const backgrounds = [
+        'background/bg1.jpg',
+        // 可以根据实际图片数量添加更多
+    ];
+    
+    // 随机选择一张图片
+    const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    
+    // 设置背景
+    document.body.style.backgroundImage = `url('${randomBg}')`;
+} 
